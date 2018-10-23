@@ -70,7 +70,7 @@ function run(argv, options) {
     }
   }
   args.push(...apidocsOpts);
-  return utils.runCLI('strong-docs/bin/cli', args, options);
+  return utils.runCLI('@loopback/tsdocs/bin/cli', args, options);
 }
 
 module.exports = run;
