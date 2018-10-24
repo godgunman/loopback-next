@@ -8,7 +8,7 @@ import {Request} from '@loopback/rest';
 import {Strategy} from 'passport';
 import {AuthenticationBindings} from '../keys';
 import {StrategyAdapter} from '../strategy-adapter';
-import {AuthenticateFn, UserProfile} from '../types';
+import {AuthenticateFn, UserProfile, StrategyExec} from '../types';
 
 /**
  * @description Provider of a function which authenticates
@@ -24,8 +24,8 @@ export class AuthenticateActionProvider implements Provider<AuthenticateFn> {
     // To solve this, we are injecting a getter function that will
     // defer resolution of the strategy until authenticate() action
     // is executed.
-    @inject.getter(AuthenticationBindings.STRATEGY)
-    readonly getStrategy: Getter<Strategy>,
+    @inject.getter(AuthenticationBindings.STRATEGY_EXEC)
+    readonly getStrategy: Getter<StrategyExec>,
     @inject.setter(AuthenticationBindings.CURRENT_USER)
     readonly setCurrentUser: Setter<UserProfile>,
   ) {}
@@ -42,7 +42,7 @@ export class AuthenticateActionProvider implements Provider<AuthenticateFn> {
    * @param request The incoming request provided by the REST layer
    */
   async action(request: Request): Promise<UserProfile | undefined> {
-    const strategy = await this.getStrategy();
+    const {strategy, options = {}} = await this.getStrategy();
     if (!strategy) {
       // The invoked operation does not require authentication.
       return undefined;
@@ -51,7 +51,7 @@ export class AuthenticateActionProvider implements Provider<AuthenticateFn> {
       throw new Error('invalid strategy parameter');
     }
     const strategyAdapter = new StrategyAdapter(strategy);
-    const user = await strategyAdapter.authenticate(request);
+    const user = await strategyAdapter.authenticate(request, options);
     this.setCurrentUser(user);
     return user;
   }

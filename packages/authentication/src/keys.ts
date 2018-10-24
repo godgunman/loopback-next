@@ -4,7 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {Strategy} from 'passport';
-import {AuthenticateFn, UserProfile} from './types';
+import {AuthenticateFn, UserProfile, StrategyExec} from './types';
 import {AuthenticationMetadata} from './decorators/authenticate.decorator';
 import {BindingKey} from '@loopback/context';
 import {MetadataAccessor} from '@loopback/metadata';
@@ -23,7 +23,7 @@ export namespace AuthenticationBindings {
    *   .toProvider(MyPassportStrategyProvider);
    * ```
    */
-  export const STRATEGY = BindingKey.create<Strategy | undefined>(
+  export const STRATEGY_EXEC = BindingKey.create<StrategyExec | undefined>(
     'authentication.strategy',
   );
 

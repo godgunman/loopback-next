@@ -4,6 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {Request} from '@loopback/rest';
+import {Strategy} from 'passport';
 
 /**
  * interface definition of a function which accepts a request
@@ -21,4 +22,9 @@ export interface UserProfile {
   id: string;
   name?: string;
   email?: string;
+}
+
+export interface StrategyExec {
+  strategy: Strategy,
+  options: Object,
 }
